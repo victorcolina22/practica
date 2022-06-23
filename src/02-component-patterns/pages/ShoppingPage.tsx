@@ -39,25 +39,42 @@ export const ShoppingPage = () => {
     product: Product;
   }) => {
     setShoppingCart((oldShoppingCart) => {
-      if (count === 0) {
-        // const { [product.id]: toDelete, ...rest } = oldShoppingCart;
-        // return rest;
+      const productInCart: ProductInCart = oldShoppingCart[product.id] || {
+        ...product,
+        count: 0,
+      };
 
-        const toDelete = { ...oldShoppingCart };
-        delete toDelete[product.id];
-        return toDelete;
-
-        // delete oldShoppingCart[product.id];
-        // return { ...oldShoppingCart };
+      if (Math.max(productInCart.count + count, 0)) {
+        productInCart.count += count;
+        return {
+          ...oldShoppingCart,
+          [product.id]: productInCart,
+        };
       }
 
-      return {
-        ...oldShoppingCart,
-        [product.id]: {
-          ...product,
-          count,
-        },
-      };
+      // Eliminar objeto utilizando desestructuración y operador rest
+      const { [product.id]: toDelete, ...rest } = oldShoppingCart;
+      return { ...rest };
+
+      // if (count === 0) {
+      //   // const { [product.id]: toDelete, ...rest } = oldShoppingCart;
+      //   // return rest;
+
+      //   const toDelete = { ...oldShoppingCart };
+      //   delete toDelete[product.id];
+      //   return toDelete;
+
+      //   // delete oldShoppingCart[product.id];
+      //   // return { ...oldShoppingCart };
+      // }
+
+      // return {
+      //   ...oldShoppingCart,
+      //   [product.id]: {
+      //     ...product,
+      //     count,
+      //   },
+      // };
     });
   };
 
@@ -79,6 +96,7 @@ export const ShoppingPage = () => {
             product={product}
             className="bg-dark text-white"
             onChange={onProductCountChange}
+            value={shoppingCart[product.id]?.count || 0}
           >
             <ProductImage
               className="custom-image"
