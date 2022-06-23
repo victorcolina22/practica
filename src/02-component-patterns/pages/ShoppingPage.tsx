@@ -1,82 +1,16 @@
-import { useState } from "react";
 import {
   ProductCard,
   ProductImage,
   ProductTitle,
   ProductButtons,
 } from "../components";
-import { Product } from "../interfaces/interfaces";
+import { products } from "../data/products";
+import { useShoppingCart } from "../hooks/useShoppingCart";
+
 import "../styles/custom-styles.css";
 
-const product = {
-  id: "1",
-  title: "Coffee Mug - Card",
-  img: "./coffee-mug.png",
-};
-
-const product2 = {
-  id: "2",
-  title: "Coffee Mug - Meme",
-  img: "./coffee-mug2.png",
-};
-
-const products: Product[] = [product, product2];
-
-interface ProductInCart extends Product {
-  count: number;
-}
-
 export const ShoppingPage = () => {
-  const [shoppingCart, setShoppingCart] = useState<{
-    [key: string]: ProductInCart;
-  }>({});
-
-  const onProductCountChange = ({
-    count,
-    product,
-  }: {
-    count: number;
-    product: Product;
-  }) => {
-    setShoppingCart((oldShoppingCart) => {
-      const productInCart: ProductInCart = oldShoppingCart[product.id] || {
-        ...product,
-        count: 0,
-      };
-
-      if (Math.max(productInCart.count + count, 0)) {
-        productInCart.count += count;
-        return {
-          ...oldShoppingCart,
-          [product.id]: productInCart,
-        };
-      }
-
-      // Eliminar objeto utilizando desestructuración y operador rest
-      const { [product.id]: toDelete, ...rest } = oldShoppingCart;
-      return { ...rest };
-
-      // if (count === 0) {
-      //   // const { [product.id]: toDelete, ...rest } = oldShoppingCart;
-      //   // return rest;
-
-      //   const toDelete = { ...oldShoppingCart };
-      //   delete toDelete[product.id];
-      //   return toDelete;
-
-      //   // delete oldShoppingCart[product.id];
-      //   // return { ...oldShoppingCart };
-      // }
-
-      // return {
-      //   ...oldShoppingCart,
-      //   [product.id]: {
-      //     ...product,
-      //     count,
-      //   },
-      // };
-    });
-  };
+  const { shoppingCart, onProductCountChange } = useShoppingCart();
 
   return (
     <div>
