@@ -31,8 +31,34 @@ export const ShoppingPage = () => {
     [key: string]: ProductInCart;
   }>({});
 
-  const onProductCountChange = () => {
-    console.log("onProductCountChange");
+  const onProductCountChange = ({
+    count,
+    product,
+  }: {
+    count: number;
+    product: Product;
+  }) => {
+    setShoppingCart((oldShoppingCart) => {
+      if (count === 0) {
+        // const { [product.id]: toDelete, ...rest } = oldShoppingCart;
+        // return rest;
+
+        const toDelete = { ...oldShoppingCart };
+        delete toDelete[product.id];
+        return toDelete;
+
+        // delete oldShoppingCart[product.id];
+        // return { ...oldShoppingCart };
+      }
+
+      return {
+        ...oldShoppingCart,
+        [product.id]: {
+          ...product,
+          count,
+        },
+      };
+    });
   };
 
   return (
@@ -63,6 +89,8 @@ export const ShoppingPage = () => {
           </ProductCard>
         ))}
       </div>
+
+      {JSON.stringify(shoppingCart, null, 5)}
 
       <div className="shopping-cart">
         <ProductCard
