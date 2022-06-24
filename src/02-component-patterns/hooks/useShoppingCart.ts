@@ -19,42 +19,25 @@ export const useShoppingCart = () => {
     product: Product;
   }) => {
     setShoppingCart((oldShoppingCart) => {
-      const productInCart: ProductInCart = oldShoppingCart[product.id] || {
-        ...product,
-        count: 0,
-      };
+      if (count === 0) {
+        // const { [product.id]: toDelete, ...rest } = oldShoppingCart;
+        // return rest;
 
-      if (Math.max(productInCart.count + count, 0)) {
-        productInCart.count += count;
-        return {
-          ...oldShoppingCart,
-          [product.id]: productInCart,
-        };
+        const newShoppingCart = { ...oldShoppingCart };
+        delete newShoppingCart[product.id];
+        return newShoppingCart;
+
+        // delete oldShoppingCart[product.id];
+        // return { ...oldShoppingCart };
       }
 
-      // Eliminar objeto utilizando desestructuración y operador rest
-      const { [product.id]: toDelete, ...rest } = oldShoppingCart;
-      return { ...rest };
-
-      // if (count === 0) {
-      //   // const { [product.id]: toDelete, ...rest } = oldShoppingCart;
-      //   // return rest;
-
-      //   const toDelete = { ...oldShoppingCart };
-      //   delete toDelete[product.id];
-      //   return toDelete;
-
-      //   // delete oldShoppingCart[product.id];
-      //   // return { ...oldShoppingCart };
-      // }
-
-      // return {
-      //   ...oldShoppingCart,
-      //   [product.id]: {
-      //     ...product,
-      //     count,
-      //   },
-      // };
+      return {
+        ...oldShoppingCart,
+        [product.id]: {
+          ...product,
+          count,
+        },
+      };
     });
   };
 
